@@ -30,10 +30,11 @@ const handler = (req: Request): Response => {
   }
 };
 
+console.log(`${APP_NAME} running on port ${PORT}`);
+
 Deno.serve(
   { port: PORT },
   (req) => {
-    console.log(`${APP_NAME} running on port ${PORT}`);
     return handler(req)
   }
 );
