@@ -9,7 +9,6 @@ import ErrorBanner from "./components/ErrorBanner";
 const REFRESH_MS = 10000;
 
 export default function App() {
-    // 
     const [current, setCurrent] = useState<Joke | null>(null);
 
     const [loadingJoke, setLoadingJoke] = useState(true);
@@ -32,7 +31,7 @@ export default function App() {
     }
 
     useEffect(() => {
-        const controller = new AbortController();
+        const controller = new AbortController();   // AbortController is a crucial tool for managing the lifecycle of async operations in React. This allows to abort ongoing fetch requests when needed.
 
         // Initial fetches
         setLoadingJoke(true);
@@ -55,7 +54,10 @@ export default function App() {
                 if (!controller.signal.aborted) setLoadingSaved(false);
             });
 
-        // Poll jokes only (saved list changes only when user saves)
+        // Set up interval for refreshing the current joke
+        // setInterval is a handy tool for performing repeated actions, however, it doesn't work well with async functions that can be aborted. In this case, 
+        // we need to ensure that if the component unmounts or if the effect is re-run for any reason, 
+        // we properly clean up the interval and abort any ongoing fetch operations to prevent memory leaks and avoid setting state on an unmounted component.
         const intervalId = setInterval(() => {
             loadCurrent(controller.signal).catch((e) => {
                 if (!controller.signal.aborted) setErrorJoke(e.message);
@@ -63,11 +65,14 @@ export default function App() {
         }, REFRESH_MS);
 
         // Cleanup
+        // Cleanup is important part of using useEffect, especially when dealing with asynchronous operations and intervals.
+        // By returning a cleanup function, we ensure that when the component unmounts or when the effect is re-run (e.g., if dependencies change), 
+        // we can abort any ongoing fetch operations and clear the interval to prevent memory leaks and avoid trying to update state on an unmounted component.
         return () => {
             controller.abort();
             clearInterval(intervalId);
         };
-    }, []);
+    }, []); // Dependency array should be explained to understand the way useEffect works. In this case, useEffect will run only when component is mounted.
 
     async function onNewJoke() {
         try {

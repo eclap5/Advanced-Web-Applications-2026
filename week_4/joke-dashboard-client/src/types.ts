@@ -1,3 +1,5 @@
+// Create simple types to be used in the front-end code.
+
 export interface Joke {
     id: string;
     category: string;
