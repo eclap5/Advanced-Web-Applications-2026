@@ -1,4 +1,4 @@
-import type { Joke } from "./types.ts";
+import type { SavedJoke } from "./types.ts";
 import { fetchJokeFromExternalApi } from "./services/external-joke-serivce.ts";
 import { addJoke, getSortedJokes } from "./store/saved-jokes-store.ts";
 
@@ -35,14 +35,14 @@ async function readJson(req: Request): Promise<unknown | null> {
     }
 }
 
-// When receiving data from the client, it is good practice to always validate it before assigning it directly to the application runtime. 
+// When receiving data from the client, it is good practice to always validate it before assigning it directly to the application. 
 // This is to prevent any unexpected data from causing issues in the application.
-function parseSaveBody(body: unknown): Joke | null {
+function parseSaveBody(body: unknown): SavedJoke | null {
     if (typeof body !== "object" || body === null) return null;
 
     const b = body as Record<string, unknown>;
 
-    if (typeof b.text !== "string" || typeof b.category !== "string" || typeof b.id !== "string" || typeof b.fetchedAt !== "string") 
+    if (typeof b.text !== "string" || typeof b.category !== "string") 
         return null;
 
     const text: string = b.text.trim();
@@ -51,16 +51,13 @@ function parseSaveBody(body: unknown): Joke | null {
     const category: string = b.category.trim();
     if (!category) return null;
 
-    const id: string = b.id.trim();
-    if (!id) return null;
-
-    const fetchedAt: string | undefined = b.fetchedAt?.toString().trim();
-    if (!fetchedAt) return null;
-
-    const parsedDate = Date.parse(fetchedAt);
-    if (Number.isNaN(parsedDate)) return null;
-
-    return { text, category, id, fetchedAt };
+    const newSavedJoke: SavedJoke = {
+        id: crypto.randomUUID(),
+        text,
+        category,
+        savedAt: new Date().toISOString(),
+    };
+    return newSavedJoke;
 }
 
 
@@ -87,12 +84,7 @@ const handleJokeSaving = async (req: Request): Promise<Response> => {
         if (!parsedBody) {
             return json({ ok: false, error: "Invalid save joke request body" }, 400);
         }
-        const newJoke: Joke = {
-            text: parsedBody.text,
-            category: parsedBody.category,
-            id: parsedBody.id,
-            fetchedAt: parsedBody.fetchedAt
-        };
+        const newJoke: SavedJoke = parsedBody;
         addJoke(newJoke);
         return json({ ok: true, data: newJoke }, 201);
     } catch (error: unknown) {
@@ -106,7 +98,7 @@ export async function router(req: Request): Promise<Response> {
     // Preflight for CORS
     // When the client makes a cross-origin request, it first sends an OPTIONS request to the server to check if the actual request is safe to send. 
     // The server needs to respond to this preflight request with the appropriate CORS headers to indicate that the actual request is allowed.
-    // Return 204 status code indicating that the preflight was successful and no actual content is passed with preflight response.
+    // Return 204 status code indicating that the preflight was successful. No actual content is passed with preflight response.
     if (req.method === "OPTIONS") {
         return new Response(null, { status: 204, headers: corsHeaders() });
     }

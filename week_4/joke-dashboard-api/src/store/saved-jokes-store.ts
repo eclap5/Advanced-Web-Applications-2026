@@ -3,14 +3,14 @@
  * While the jokes are saved to application runtime memory in this example, this @store module is mocking the database layer of the application.
 */
 
-import type { Joke } from "../types.ts";
+import type { SavedJoke } from "../types.ts";
 
-const savedJokes: Joke[] = [];
+const savedJokes: SavedJoke[] = [];
 
-export function addJoke(joke: Joke): void {
+export function addJoke(joke: SavedJoke): void {
     savedJokes.push(joke);
 }
 
-export function getSortedJokes(): Joke[] {
-    return [...savedJokes].sort((a, b) => b.fetchedAt.localeCompare(a.fetchedAt)); // Sort by fetchedAt in descending order
+export function getSortedJokes(): SavedJoke[] {
+    return [...savedJokes].sort((a, b) => b.savedAt.localeCompare(a.savedAt)); // Sort by savedAt in descending order
 }
