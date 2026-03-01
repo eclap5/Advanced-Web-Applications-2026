@@ -6,7 +6,7 @@ type Props = {
     error: string;
 };
 
-export default function SavedJokesList({ jokes, loading, error }: Props) {
+export default function SavedJokesList({ jokes, loading, error }: Readonly<Props>) {
     return (
         <div className="card">
             <h2>Saved jokes (from backend)</h2>

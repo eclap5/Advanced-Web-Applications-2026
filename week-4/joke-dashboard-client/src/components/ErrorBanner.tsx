@@ -2,7 +2,7 @@ type Props = {
     message: string;
 };
 
-export default function ErrorBanner({ message }: Props) {
+export default function ErrorBanner({ message }: Readonly<Props>) {
     return (
         <div className="card error">
             <strong>Error:</strong> {message}

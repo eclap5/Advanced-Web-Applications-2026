@@ -12,7 +12,7 @@ export default function Header({
     onNewJoke,
     canSave,
     onSave,
-}: Props) {
+}: Readonly<Props>) {
     return (
         <header className="header">
             <div>

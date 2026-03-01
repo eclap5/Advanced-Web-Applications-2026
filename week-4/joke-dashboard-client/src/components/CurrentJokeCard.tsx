@@ -4,7 +4,7 @@ type Props = {
     joke: Joke;
 };
 
-export default function CurrentJokeCard({ joke }: Props) {
+export default function CurrentJokeCard({ joke }: Readonly<Props>) {
     return (
         <div className="card">
             <div className="meta">
