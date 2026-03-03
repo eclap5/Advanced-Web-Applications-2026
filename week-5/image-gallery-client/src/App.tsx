@@ -63,10 +63,6 @@ export default function App() {
                 <div>
                     <h1>Image Gallery</h1>
                 </div>
-
-                <button className="btn" onClick={refresh} disabled={loading || uploading}>
-                    Refresh
-                </button>
             </header>
 
             <div className="card">

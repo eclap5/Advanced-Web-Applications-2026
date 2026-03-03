@@ -15,7 +15,7 @@ export default function UploadForm({ uploading, onUpload }: Readonly<Props>) {
         setFile(null);
 
         // Reset the file input visually
-        e.currentTarget.reset();
+        e.target.reset();
     }
 
     return (
