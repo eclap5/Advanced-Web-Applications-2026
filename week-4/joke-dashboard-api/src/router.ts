@@ -27,7 +27,7 @@ function json(data: unknown, status = 200): Response {
   });
 }
 
-async function readJson(req: Request): Promise<unknown | null> {
+async function readJson(req: Request): Promise<unknown> {
     try {
         return await req.json();
     } catch {

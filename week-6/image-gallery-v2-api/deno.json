@@ -1,0 +1,8 @@
+{
+  "tasks": {
+    "dev": "deno run --watch --allow-net --allow-read --allow-write --allow-env src/main.ts"
+  },
+  "imports": {
+    "@db/postgres": "jsr:@db/postgres@^0.19.5"
+  }
+}
