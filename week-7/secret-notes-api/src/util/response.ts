@@ -1,3 +1,4 @@
+// With the bearer token we now need to add also authorization to allowed headers in CORS configuration.
 export function corsHeaders() {
     return {
         "access-control-allow-origin": "*",

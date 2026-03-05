@@ -1,8 +1,8 @@
 /**
- * Database connection pool setup
+ * Database connection pool setup.
+ * Initialize a connection pool to the PostgreSQL database using the connection string from the environment variable.
  * 
- * This module could also be introduced as the infrastructure configuration layer, but in the sake of simplicity, this will be kept as a simple database configuration module.
- */
+*/
 
 import { Pool } from "@db/postgres";
 

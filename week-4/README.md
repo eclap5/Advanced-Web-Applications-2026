@@ -44,7 +44,7 @@ The application created during this demo will be a simple Joke Dashboard applica
 
 ## 3) Checklist
 
-1. Run API first (`deno task dev`), then client (`npm run dev`).
+1. Run API first (`deno task dev`), then client (`deno task dev`).
 2. Show normal flow:
 	- New joke fetch works.
 	- Save joke works.

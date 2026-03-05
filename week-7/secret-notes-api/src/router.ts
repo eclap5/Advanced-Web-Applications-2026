@@ -47,7 +47,7 @@ async function handleLogin(req: Request): Promise<Response> {
 
 async function handleListNotes(req: Request): Promise<Response> {
     try {
-        const userId = await requireAuth(req);
+        const userId = await requireAuth(req);      // Check if the user is authenticated by verifying the JWT token.
         if (!userId) {
             return json({ ok: false, error: { message: "Not authenticated" } }, 401);
         }

@@ -1,4 +1,9 @@
-const TOKEN = "secret_notes_token";
+/**
+ * This file introduces the functions to be used in handling the JWT token on the client side.
+ * The token is stored in the browser's localStorage, and we have functions to get, set and clear the token, as well as a function to check if the user is logged in.
+*/
+
+const TOKEN = "token";
 
 export function getToken(): string | null {
     return localStorage.getItem(TOKEN);
@@ -13,5 +18,5 @@ export function clearToken(): void {
 }
 
 export function isLoggedIn(): boolean {
-    return !!getToken();
+    return !!getToken();    // Double negation syntax to convert the token string to a boolean. If there is a token, it will return true, otherwise false.
 }

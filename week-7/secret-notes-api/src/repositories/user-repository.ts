@@ -27,7 +27,7 @@ export async function createUser(pool: Pool, user: User): Promise<void> {
     `;
 } catch (error: unknown) {
     if (error instanceof Error && error.message === "23505") {      // Unique violation error code from Postgres. Add this guard clause to handle race conditions.
-        throw new Error("EMAIL_ALREADY_EXISTS");
+        throw new Error("EMAIL_ALREADY_EXISTS");    // We can use predefined custom error message to handle this specific case in the service layer, and return appropriate response to the client.
     }
     throw error;
 } finally {

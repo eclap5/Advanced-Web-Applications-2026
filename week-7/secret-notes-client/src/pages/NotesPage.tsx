@@ -5,7 +5,7 @@ import type { Note } from "../types";
 import { clearToken } from "../auth";
 
 export default function NotesPage() {
-    const navigate = useNavigate();
+    const navigate = useNavigate();     // useNavigate hook from react-router-dom to programmatically navigate between pages.
 
     const [notes, setNotes] = useState<Note[]>([]);
     const [loading, setLoading] = useState(true);
@@ -45,7 +45,8 @@ export default function NotesPage() {
         load();
 
         return () => controller.abort();
-    }, [navigate]);
+    }, [navigate]);     // Add navigate to the dependency array of useEffect, since we are using it inside the effect. 
+    // This is important to avoid potential issues with stale closures, and to ensure that the effect runs correctly when the navigate function changes (which can happen if the component is re-rendered).
 
     return (
         <div className="card">
