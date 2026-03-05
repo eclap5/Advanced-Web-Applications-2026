@@ -10,5 +10,3 @@ create table if not exists uploads (
 );
 
 create index if not exists uploads_uploaded_at_idx on uploads (uploaded_at desc);
-
-commit;
