@@ -4,6 +4,8 @@
  * This way, if we need to change the external API or add additional logic related to fetching jokes, we can do it in one place without affecting the rest of the application.
  * 
  * Point is that the application core logic should be separated from the routing. 
+ * 
+ * It is worth noting that if public free APIs are needed, this GitHub repository contains a list of free APIs: https://github.com/public-api-lists/public-api-lists
 */
 
 import { FetchedJoke } from "../types.ts";
