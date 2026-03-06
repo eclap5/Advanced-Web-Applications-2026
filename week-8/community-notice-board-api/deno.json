@@ -1,0 +1,11 @@
+{
+  "tasks": {
+    "dev": "deno run --watch --allow-net --allow-env --env-file=.env --allow-read --allow-ffi src/main.ts",
+    "seed-admin": "deno run --allow-net --allow-env --env-file=.env --allow-read --allow-ffi scripts/seed-admin.ts"
+  },
+  "imports": {
+    "@db/postgres": "jsr:@db/postgres@^0.19.5",
+    "@felix/bcrypt": "jsr:@felix/bcrypt@^1.0.8",
+    "jose": "npm:jose@^6.2.0"
+  }
+}
