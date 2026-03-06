@@ -1,7 +1,0 @@
-{
-  "imports": {
-    "@emotion/react": "npm:@emotion/react@^11.14.0",
-    "@emotion/styled": "npm:@emotion/styled@^11.14.1",
-    "@mui/material": "npm:@mui/material@^7.3.9"
-  }
-}
