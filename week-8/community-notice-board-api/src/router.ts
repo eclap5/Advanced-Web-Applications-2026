@@ -157,12 +157,9 @@ export async function router(req: Request): Promise<Response> {
     if (req.method === "OPTIONS") {
         return new Response(null, { status: 204, headers: corsHeaders() });
     }
-
-    const deleteUserRoute = /^\/api\/admin\/users\/[^/]+$/;     // This regex pattern matches /api/admin/users/{userId}, where {userId} can be any string without slashes.
-
+    
     // We could build a more complex routing system where we could include the delete route to the route mapping, but for simplicity we will just handle it separately here.
-    // Also, use of regex is optional, we could also just check if the pathname starts with /api/admin/users/ and then extract the userId, but regex gives us a more precise control over the matching. 
-    if (req.method === "DELETE" && deleteUserRoute.test(url.pathname)) {
+    if (req.method === "DELETE" && url.pathname.startsWith("/api/admin/users/")) {
         return await deleteUserHandler(req);
     }
 
