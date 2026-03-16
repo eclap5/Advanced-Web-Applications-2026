@@ -1,0 +1,25 @@
+const en = {
+    appTitle: "Book Explorer",
+    searchLabel: "Search books",
+    searchPlaceholder: "Type a title, author, or keyword...",
+    sortBy: "Sort by",
+    sortTitle: "Title",
+    sortYear: "First publish year",
+    favorites: "Favorites",
+    addFavorite: "Add favorite",
+    remove: "Remove",
+    noCover: "No cover image",
+    firstPublished: "First published",
+    editions: "Editions",
+    results: "Results",
+    favoritesCount: "Favorites",
+    loading: "Loading...",
+    searchHint: "Type at least 2 characters to search books.",
+    sourceInfo: "Search results are fetched from Open Library.",
+    unknown: "Unknown",
+    language: "Language",
+    noFavorites: "No favorites yet.",
+    storedLocally: "Stored locally in the browser.",
+};
+
+export default en;

@@ -3,13 +3,10 @@ export interface Book {
     title: string;
     authorName: string[];
     firstPublishYear?: number;
-    language: string[];
     coverId?: number;
     editionCount: number;
 }
 
-export interface SearchFilters {
-    language: string;
+export interface SearchControls {
     sortBy: "title" | "year";
-    favoritesOnly: boolean;
 }

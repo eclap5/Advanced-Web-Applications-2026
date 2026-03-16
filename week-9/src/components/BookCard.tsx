@@ -1,13 +1,14 @@
+import { useState } from "react";
 import {
     Button,
     Card,
     CardActions,
     CardContent,
     CardMedia,
-    Chip,
     Stack,
     Typography,
 } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import { getCoverUrl } from "../api";
 import type { Book } from "../types";
 
@@ -22,7 +23,9 @@ export default function BookCard({
     isFavorite,
     onToggleFavorite,
 }: Readonly<Props>) {
-    const coverUrl = getCoverUrl(book.coverId);
+    const { t } = useTranslation();
+    const initialCoverUrl = getCoverUrl(book.coverId);
+    const [coverUrl, setCoverUrl] = useState(initialCoverUrl);
 
     return (
         <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -32,6 +35,7 @@ export default function BookCard({
                     height="220"
                     image={coverUrl}
                     alt={book.title}
+                    onError={() => setCoverUrl(null)}
                 />
             ) : (
                 <Stack
@@ -43,7 +47,7 @@ export default function BookCard({
                     }}
                 >
                     <Typography variant="body2" color="text.secondary">
-                        No cover image
+                        {t("noCover")}
                     </Typography>
                 </Stack>
             )}
@@ -58,23 +62,17 @@ export default function BookCard({
                 </Typography>
 
                 <Typography variant="body2" sx={{ mt: 1 }}>
-                    First published: {book.firstPublishYear ?? "Unknown"}
+                    {t("firstPublished")}: {book.firstPublishYear ?? t("unknown")}
                 </Typography>
 
                 <Typography variant="body2">
-                    Editions: {book.editionCount}
+                    {t("editions")}: {book.editionCount}
                 </Typography>
-
-                <Stack direction="row" spacing={1} sx={{ mt: 2, flexWrap: "wrap" }}>
-                    {book.language.slice(0, 3).map((lang) => (
-                        <Chip key={lang} size="small" label={lang} />
-                    ))}
-                </Stack>
             </CardContent>
 
             <CardActions>
                 <Button onClick={() => onToggleFavorite(book)}>
-                    {isFavorite ? "Remove favorite" : "Add favorite"}
+                    {isFavorite ? t("removeFavorite") : t("addFavorite")}
                 </Button>
             </CardActions>
         </Card>

@@ -16,7 +16,7 @@ export default function BookGrid({
     return (
         <Grid container spacing={2}>
             {books.map((book) => {
-                const isFavorite = favorites.some((f) => f.key === book.key);
+                const isFavorite = favorites.some((favorite) => favorite.key === book.key);
 
                 return (
                     <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={book.key}>

@@ -8,7 +8,6 @@ type OpenLibraryDoc = {
     title?: string;
     author_name?: string[];
     first_publish_year?: number;
-    language?: string[];
     cover_i?: number;
     edition_count?: number;
 };
@@ -44,7 +43,6 @@ export async function searchBooks(
         title: doc.title ?? "Untitled",
         authorName: doc.author_name ?? ["Unknown author"],
         firstPublishYear: doc.first_publish_year,
-        language: doc.language ?? [],
         coverId: doc.cover_i,
         editionCount: doc.edition_count ?? 0,
     }));
@@ -53,5 +51,5 @@ export async function searchBooks(
 // Helper function to construct cover image URL from cover ID
 export function getCoverUrl(coverId?: number): string | null {
     if (!coverId) return null;
-    return `https://covers.openlibrary.org/b/id/${coverId}-M.jpg`;
+    return `https://covers.openlibrary.org/b/id/${coverId}-M.jpg?default=false`;
 }

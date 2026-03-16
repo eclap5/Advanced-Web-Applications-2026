@@ -1,0 +1,25 @@
+const fi = {
+    appTitle: "Kirjahaku",
+    searchLabel: "Hae kirjoja",
+    searchPlaceholder: "Kirjoita nimi, tekijä tai hakusana...",
+    sortBy: "Järjestä",
+    sortTitle: "Nimen mukaan",
+    sortYear: "Ensijulkaisuvuoden mukaan",
+    favorites: "Suosikit",
+    addFavorite: "Lisää suosikiksi",
+    remove: "Poista",
+    noCover: "Ei kansikuvaa",
+    firstPublished: "Ensijulkaisu",
+    editions: "Painokset",
+    results: "Tulokset",
+    favoritesCount: "Suosikit",
+    loading: "Ladataan...",
+    searchHint: "Kirjoita vähintään 2 merkkiä hakeaksesi kirjoja.",
+    sourceInfo: "Hakutulokset haetaan Open Librarysta.",
+    unknown: "Tuntematon",
+    language: "Kieli",
+    noFavorites: "Ei suosikkeja vielä.",
+    storedLocally: "Tallennetaan paikallisesti selaimeen.",
+};
+
+export default fi;
