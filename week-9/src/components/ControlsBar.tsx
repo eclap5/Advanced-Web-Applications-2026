@@ -1,7 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select, Stack, Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import type { SearchControls } from "../types";
-import LanguageSwitcher from "./LanguageSwitcher";
 
 type Props = {
     controls: SearchControls;
@@ -14,8 +12,6 @@ export default function ControlsBar({
     favoritesCount,
     onControlsChange,
 }: Readonly<Props>) {
-    const { t } = useTranslation();
-
     return (
         <Stack
             direction={{ xs: "column", md: "row" }}
@@ -25,10 +21,10 @@ export default function ControlsBar({
         >
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
                 <FormControl sx={{ minWidth: 200 }}>
-                    <InputLabel id="sort-label">{t("sortBy")}</InputLabel>
+                    <InputLabel id="sort-label">Sort by</InputLabel>
                     <Select
                         labelId="sort-label"
-                        label={t("sortBy")}
+                        label="Sort by"
                         value={controls.sortBy}
                         onChange={(e) =>
                             onControlsChange({
@@ -36,16 +32,14 @@ export default function ControlsBar({
                                 sortBy: e.target.value as "title" | "year",
                             })}
                     >
-                        <MenuItem value="title">{t("sortTitle")}</MenuItem>
-                        <MenuItem value="year">{t("sortYear")}</MenuItem>
+                        <MenuItem value="title">Title</MenuItem>
+                        <MenuItem value="year">First publish year</MenuItem>
                     </Select>
                 </FormControl>
-
-                <LanguageSwitcher />
             </Stack>
 
             <Typography variant="body1">
-                {t("favoritesCount")}: {favoritesCount}
+                Favorites: {favoritesCount}
             </Typography>
         </Stack>
     );

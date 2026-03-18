@@ -8,7 +8,6 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import type { Book, SearchControls } from "./types";
 import { useBookSearch } from "./hooks/useBookSearch";
 import { useLocalStorage } from "./hooks/useLocalStorage";
@@ -22,8 +21,6 @@ const INITIAL_CONTROLS: SearchControls = {
 };
 
 export default function App() {
-    const { t } = useTranslation();
-
     const [query, setQuery] = useState("");
     const [controls, setControls] = useState<SearchControls>(INITIAL_CONTROLS);
     const [favorites, setFavorites] = useLocalStorage<Book[]>(
@@ -80,10 +77,10 @@ return (
 
                 <Paper sx={{ p: 2 }}>
                     <Typography variant="subtitle1">
-                        {t("results")}: {visibleBooks.length}
+                        Results: {visibleBooks.length}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {t("sourceInfo")}
+                        Search results are fetched from Open Library.
                     </Typography>
                 </Paper>
 
@@ -99,7 +96,7 @@ return (
                     {query.trim().length < 2 ? (
                         <Paper sx={{ p: 3 }}>
                             <Typography color="text.secondary">
-                                {t("searchHint")}
+                                Type at least 2 characters to search books.
                             </Typography>
                         </Paper>
                     ) : null}

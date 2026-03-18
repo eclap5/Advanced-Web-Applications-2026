@@ -8,7 +8,6 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import type { Book } from "../types";
 
 type Props = {
@@ -20,21 +19,19 @@ export default function FavoritesPanel({
     favorites,
     onRemoveFavorite,
 }: Readonly<Props>) {
-    const { t } = useTranslation();
-
     return (
         <Paper sx={{ p: 2 }}>
             <Stack spacing={1}>
-                <Typography variant="h6">{t("favorites")}</Typography>
+                <Typography variant="h6">Favorites</Typography>
                 <Typography variant="body2" color="text.secondary">
-                    {t("storedLocally")}
+                    Stored locally in the browser.
                 </Typography>
 
                 <Divider />
 
                 {favorites.length === 0 ? (
                     <Typography variant="body2" color="text.secondary">
-                        {t("noFavorites")}
+                        No favorites yet.
                     </Typography>
                 ) : (
                     <List dense>
@@ -47,7 +44,7 @@ export default function FavoritesPanel({
                                         size="small"
                                         onClick={() => onRemoveFavorite(book)}
                                     >
-                                        {t("remove")}
+                                        Remove
                                     </Button>
                                 )}
                             >

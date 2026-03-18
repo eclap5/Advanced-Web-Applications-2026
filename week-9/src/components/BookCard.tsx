@@ -8,7 +8,6 @@ import {
     Stack,
     Typography,
 } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import { getCoverUrl } from "../api";
 import type { Book } from "../types";
 
@@ -23,7 +22,6 @@ export default function BookCard({
     isFavorite,
     onToggleFavorite,
 }: Readonly<Props>) {
-    const { t } = useTranslation();
     const initialCoverUrl = getCoverUrl(book.coverId);
     const [coverUrl, setCoverUrl] = useState(initialCoverUrl);
 
@@ -47,7 +45,7 @@ export default function BookCard({
                     }}
                 >
                     <Typography variant="body2" color="text.secondary">
-                        {t("noCover")}
+                        No cover image
                     </Typography>
                 </Stack>
             )}
@@ -62,17 +60,17 @@ export default function BookCard({
                 </Typography>
 
                 <Typography variant="body2" sx={{ mt: 1 }}>
-                    {t("firstPublished")}: {book.firstPublishYear ?? t("unknown")}
+                    First published: {book.firstPublishYear ?? "Unknown"}
                 </Typography>
 
                 <Typography variant="body2">
-                    {t("editions")}: {book.editionCount}
+                    Editions: {book.editionCount}
                 </Typography>
             </CardContent>
 
             <CardActions>
                 <Button onClick={() => onToggleFavorite(book)}>
-                    {isFavorite ? t("removeFavorite") : t("addFavorite")}
+                    {isFavorite ? "Remove favorite" : "Add favorite"}
                 </Button>
             </CardActions>
         </Card>

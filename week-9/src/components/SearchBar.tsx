@@ -1,5 +1,4 @@
 import { Stack, TextField, Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
 
 type Props = {
     query: string;
@@ -7,15 +6,13 @@ type Props = {
 };
 
 export default function SearchBar({ query, onQueryChange }: Readonly<Props>) {
-    const { t } = useTranslation();
-
     return (
         <Stack spacing={2}>
-            <Typography variant="h4">{t("appTitle")}</Typography>
+            <Typography variant="h4">Book Explorer</Typography>
 
             <TextField
-                label={t("searchLabel")}
-                placeholder={t("searchPlaceholder")}
+                label="Search books"
+                placeholder="Type a title, author, or keyword..."
                 value={query}
                 onChange={(e) => onQueryChange(e.target.value)}
                 fullWidth

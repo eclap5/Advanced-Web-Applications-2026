@@ -7,7 +7,6 @@ The core learning goals are:
 - side effects with `useEffect` (debounced fetching + cleanup)
 - performance optimization with `useMemo` for derived data
 - typed component composition in React + TypeScript
-- `i18n` for multi-language support
 - Continuance of using Material UI component-based styling and layout
 
 Unlike previous weeks, this week is fully front-end and integrates with an external API.
@@ -19,7 +18,6 @@ This demonstration is using Open Library API: https://openlibrary.org/developers
 ## Libraries and tools used
 
 - `@mui/material`, `@emotion/react`, `@emotion/styled` for UI components and theming
-- `i18next`, `react-i18next` for internationalization
 
 ### 1) Define shared types first (`src/types.ts`)
 
@@ -85,34 +83,7 @@ Key React concepts to emphasize:
 - lists persisted favorites
 - shows empty state when no favorites exist
 
-### 6) Add internationalization (`src/i18n/*`) and language switcher (`src/components/LanguageSwitcher.tsx`)
-
-Implement a small but complete i18n setup:
-
-#### `src/i18n/en.ts` and `src/i18n/fi.ts`
-- define translation dictionaries as key-value objects
-- keep keys shared across languages (`appTitle`, `searchLabel`, `sortBy`, etc.)
-
-#### `src/i18n/index.ts`
-- initialize `i18next` with `initReactI18next`
-- configure `lng`, `fallbackLng`, and translation resources
-- export initialized i18n instance
-
-#### `src/main.tsx`
-- import `"./i18n"` once at startup so translations are ready before rendering
-
-#### `src/components/LanguageSwitcher.tsx`
-- build a controlled Material UI `Select` for language choice
-- read current language from `i18n.language`
-- call `i18n.changeLanguage(...)` on selection change
-
-How to use translations in components:
-
-- call `useTranslation()`
-- replace hardcoded UI text with `t("translationKey")`
-- include this in `SearchBar`, `ControlsBar`, `BookCard`, and `FavoritesPanel`
-
-### 7) Compose application logic (`src/App.tsx`)
+### 6) Compose application logic (`src/App.tsx`)
 
 Wire everything together:
 
@@ -134,7 +105,7 @@ Render flow to highlight during lecture:
 - left panel favorites, right panel result area
 - status states: minimum-query hint, loading spinner, error alert, or results grid
 
-### 8) Add theme and app bootstrap
+### 7) Add theme and app bootstrap
 
 #### `src/theme.ts`
 - create MUI light theme with custom primary/secondary colors
