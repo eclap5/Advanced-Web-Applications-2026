@@ -1,0 +1,28 @@
+{
+  "version": "5",
+  "specifiers": {
+    "jsr:@panva/jose@^6.1.3": "6.2.1",
+    "jsr:@panva/oauth4webapi@^3.8.4": "3.8.5",
+    "jsr:@panva/openid-client@^6.8.2": "6.8.2"
+  },
+  "jsr": {
+    "@panva/jose@6.2.1": {
+      "integrity": "6725a90a47be84c57a0f889c73bf09c6a209019c816f1f029f9084929fadfcbf"
+    },
+    "@panva/oauth4webapi@3.8.5": {
+      "integrity": "3b63de61690ab6ddf65764f3f1510a2f45ed1aa618dda22d4dfc06d1d4513da3"
+    },
+    "@panva/openid-client@6.8.2": {
+      "integrity": "48c62222bbfd92e07370351222bf21f8595182f98f8f234a3234295e6f9dfaa2",
+      "dependencies": [
+        "jsr:@panva/jose",
+        "jsr:@panva/oauth4webapi"
+      ]
+    }
+  },
+  "workspace": {
+    "dependencies": [
+      "jsr:@panva/openid-client@^6.8.2"
+    ]
+  }
+}
