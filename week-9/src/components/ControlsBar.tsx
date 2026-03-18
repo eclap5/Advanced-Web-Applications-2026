@@ -29,7 +29,7 @@ export default function ControlsBar({
                         onChange={(e) =>
                             onControlsChange({
                                 ...controls,
-                                sortBy: e.target.value as "title" | "year",
+                                sortBy: e.target.value,
                             })}
                     >
                         <MenuItem value="title">Title</MenuItem>
