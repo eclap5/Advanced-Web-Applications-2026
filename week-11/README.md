@@ -30,8 +30,7 @@ This demo application includes the following items from OWASP Top 10:
 	- `deno task dev`
 5. Start client:
 	- `cd ../secure-application-client`
-	- `npm install`
-	- `npm run dev`
+	- `deno task dev`
 
 Seeded users:
 - Admin: `admin@example.com` / `Admin123!` / `11111111-1111-1111-1111-111111111111`
