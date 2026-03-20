@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { KeyManager } from "../components/KeyManager";
 
 export function DashboardPage() {
     const navigate = useNavigate();
@@ -49,25 +50,11 @@ export function DashboardPage() {
                         </Typography>
 
                         <Typography variant="body1" color="text.secondary">
-                            Welcome to the deployed demo application. This page
-                            will later include encryption key handling, file uploads,
-                            and encrypted file downloads.
+                            Manage your client-side encryption key and encrypted files.
                         </Typography>
                     </Box>
 
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h6" gutterBottom>
-                                Encryption key
-                            </Typography>
-
-                            <Typography variant="body2" color="text.secondary">
-                                In later stages, this section will allow the user to
-                                generate, paste, or manage their client-side encryption
-                                key. The server will not store this key.
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                    <KeyManager />
 
                     <Card>
                         <CardContent>
@@ -76,9 +63,8 @@ export function DashboardPage() {
                             </Typography>
 
                             <Typography variant="body2" color="text.secondary">
-                                This section will later contain the file upload form.
-                                Files will be encrypted in the browser before being
-                                sent to the backend and stored in Azure Blob Storage.
+                                This section will later contain the encrypted file
+                                upload form.
                             </Typography>
                         </CardContent>
                     </Card>
@@ -91,8 +77,7 @@ export function DashboardPage() {
 
                             <Typography variant="body2" color="text.secondary">
                                 This section will later display files owned by the
-                                currently logged-in user. Users will only be able to
-                                view and download their own files.
+                                currently logged-in user.
                             </Typography>
                         </CardContent>
                     </Card>

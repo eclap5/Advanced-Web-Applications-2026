@@ -11,7 +11,7 @@ import {
     Typography,
 } from "@mui/material";
 import { AuthPageLayout } from "../components/AuthPageLayout";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth.ts";
 
 export function RegisterPage() {
     const navigate = useNavigate();

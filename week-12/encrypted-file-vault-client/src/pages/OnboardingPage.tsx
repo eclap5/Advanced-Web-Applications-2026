@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import KeyIcon from "@mui/icons-material/Key";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth.ts";
 import { setEncryptionKeyFingerprintRequest } from "../utils/api";
 import {
     createKeyFingerprint,

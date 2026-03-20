@@ -9,19 +9,19 @@ import {
     getToken,
     clearToken,
     setToken as storeToken,
-} from "../utils/auth";
+} from "../utils/auth.ts";
 import type {
     AuthContextValue,
     LoginCredentials,
     RegisterCredentials,
     User,
-} from "../utils/types";
-import { AuthContext } from "./auth-context";
+} from "../utils/types.ts";
+import { AuthContext } from "../contexts/AuthContext.tsx";
 import {
     getCurrentUserRequest,
     loginRequest,
     registerRequest,
-} from "../utils/api";
+} from "../utils/api.ts";
 
 type AuthProviderProps = {
     children: ReactNode;
