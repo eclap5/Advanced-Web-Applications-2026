@@ -1,11 +1,10 @@
 import type { PropsWithChildren } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
 import { useAuth } from "../hooks/useAuth";
 
-export function ProtectedRoute({ children }: Readonly<PropsWithChildren>) {
+export function OnboardingRoute({ children }: Readonly<PropsWithChildren>) {
     const { user, isAuthenticated, isLoading } = useAuth();
-    const location = useLocation();
 
     if (isLoading) {
         return (
@@ -23,11 +22,11 @@ export function ProtectedRoute({ children }: Readonly<PropsWithChildren>) {
     }
 
     if (!isAuthenticated) {
-        return <Navigate to="/login" replace state={{ from: location }} />;
+        return <Navigate to="/login" replace />;
     }
 
-    if (!user?.hasEncryptionKey) {
-        return <Navigate to="/onboarding" replace />;
+    if (user?.hasEncryptionKey) {
+        return <Navigate to="/" replace />;
     }
 
     return <>{children}</>;

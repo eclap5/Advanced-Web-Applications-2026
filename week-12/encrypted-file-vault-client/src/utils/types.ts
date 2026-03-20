@@ -6,6 +6,7 @@ export interface JwtPayload {
 export type User = {
     id: string;
     email: string;
+    hasEncryptionKey: boolean;
 };
 
 export type LoginCredentials = {

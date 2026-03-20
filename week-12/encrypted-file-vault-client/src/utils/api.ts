@@ -56,5 +56,30 @@ export async function getCurrentUserRequest(token: string): Promise<User> {
         throw new Error("Failed to fetch current user.");
     }
 
-    return await response.json();
+    const result = await response.json();
+
+    return result.data;
+}
+
+export async function setEncryptionKeyFingerprintRequest(fingerprint: string): Promise<void> {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        throw new Error("No authentication token found.");
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/auth/onboarding`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ encryptionKeyFingerprint: fingerprint }),
+    });
+
+    if (!response.ok) {
+        const data = await response.json() ?? null;
+        const errorText = data?.error?.message;
+        throw new Error(errorText || "Failed to save encryption key fingerprint.");
+    }
 }

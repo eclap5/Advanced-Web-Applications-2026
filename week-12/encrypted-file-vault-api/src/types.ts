@@ -3,14 +3,22 @@ export type User = {
     email: string;
     passwordHash: string;
     createdAt: Date;
+    encryptionKeyFingerprint?: string | null;
 };
 
 export type LoginResult = {
     token: string;
-    user: Omit<User, "passwordHash"|"createdAt">;
+    user: {
+        id: string;
+        email: string;
+        hasEncryptionKey: boolean;
+    };
 };
 
-export type AuthUser = Omit<User, "passwordHash"|"createdAt">;
+export type AuthUser = {
+    id: string;
+    email: string;
+};
 
 export type RouteKey = `${string} ${string}`;
 export type Handler = (req: Request) => Promise<Response>;

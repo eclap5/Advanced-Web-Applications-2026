@@ -14,10 +14,11 @@ import { AuthPageLayout } from "../components/AuthPageLayout";
 import { useAuth } from "../hooks/useAuth";
 
 export function LoginPage() {
+    const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
-    const { login } = useAuth();
     const successMessage = location.state?.message || "";
+    const from = location.state?.from?.pathname || "/";
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -29,8 +30,6 @@ export function LoginPage() {
             globalThis.history.replaceState({}, document.title);
         }
     }, [successMessage]);
-
-    const from = location.state?.from?.pathname || "/";
 
     async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
         event.preventDefault();

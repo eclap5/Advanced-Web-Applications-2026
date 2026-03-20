@@ -1,5 +1,6 @@
 import { pool } from "./db/pool.ts";
-import { loginUser, registerUser } from "./services/auth-service.ts";
+import { loginUser, registerUser, setUserEncryptionKeyFingerprint } from "./services/auth-service.ts";
+import { findUserById } from "./repositories/user-repository.ts";
 import type { AuthUser, Handler, LoginResult, RouteKey } from "./types.ts";
 import { corsHeaders, json } from "./utils/response.ts";
 import { withAuth } from "./middleware/auth-middleware.ts";
@@ -66,14 +67,53 @@ async function loginHandler(req: Request): Promise<Response> {
     }
 }
 
-const profileHandler = withAuth((_req: Request, user: AuthUser) => {
-    return Promise.resolve(json({ ok: true, data: user }, 200));
+const onboardingHandler = withAuth(async (req: Request, user: AuthUser) => {
+    const body = await req.json();
+    const encryptionKeyFingerprint: string = body.encryptionKeyFingerprint;
+    const userId = user.id;
+
+    try {
+        await setUserEncryptionKeyFingerprint(pool, userId, encryptionKeyFingerprint);
+        return json({ ok: true }, 200);
+    } catch (e: unknown) {
+        if (e instanceof Error) {
+            console.error("Error in onboardingHandler:", e);
+        }
+        return json(
+            { ok: false, error: { message: "An error occurred while setting the encryption key fingerprint" } },
+            500,
+        );
+    }
+});
+
+const profileHandler = withAuth(async (_req: Request, user: AuthUser) => {
+    const dbUser = await findUserById(pool, user.id);
+
+    if (!dbUser) {
+        return json(
+            { ok: false, error: { message: "User not found" } },
+            404,
+        );
+    }
+
+    return json(
+        {
+            ok: true,
+            data: {
+                id: dbUser.id,
+                email: dbUser.email,
+                hasEncryptionKey: Boolean(dbUser.encryptionKeyFingerprint),
+            },
+        },
+        200,
+    );
 });
     
 
 const routes = new Map<RouteKey, Handler>([
     ["POST /api/auth/register", registerHandler],
     ["POST /api/auth/login", loginHandler],
+    ["POST /api/auth/onboarding", onboardingHandler],
     ["GET /api/auth/profile", profileHandler],
 ]);
 
