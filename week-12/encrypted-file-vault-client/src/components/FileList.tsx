@@ -13,9 +13,10 @@ import {
     Typography,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useEncryptionKey } from "../hooks/useEncryptionKey";
 import { decryptFile } from "../utils/crypto";
-import { downloadFileRequest, getFilesRequest } from "../utils/api";
+import { deleteFileRequest, downloadFileRequest, getFilesRequest } from "../utils/api";
 import type { StoredFile } from "../utils/types";
 
 type FileListProps = {
@@ -39,6 +40,7 @@ export function FileList({ refreshToken }: Readonly<FileListProps>) {
     const [files, setFiles] = useState<StoredFile[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [downloadingId, setDownloadingId] = useState<string | null>(null);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState("");
 
     async function loadFiles() {
@@ -102,6 +104,37 @@ export function FileList({ refreshToken }: Readonly<FileListProps>) {
         }
     }
 
+    async function handleDelete(file: StoredFile) {
+        if (!isLoaded || !fingerprint) {
+            setErrorMessage("Load your encryption key before deleting files.");
+            return;
+        }
+
+        const shouldDelete = globalThis.confirm(
+            `Delete "${file.originalFilename}" permanently?`,
+        );
+
+        if (!shouldDelete) {
+            return;
+        }
+
+        setErrorMessage("");
+        setDeletingId(file.id);
+
+        try {
+            await deleteFileRequest(file.id, fingerprint);
+            setFiles((prevFiles) => prevFiles.filter((item) => item.id !== file.id));
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "Failed to delete file.";
+            setErrorMessage(message);
+        } finally {
+            setDeletingId(null);
+        }
+    }
+
     let fileListContent: React.ReactNode;
 
     if (isLoading) {
@@ -130,19 +163,38 @@ export function FileList({ refreshToken }: Readonly<FileListProps>) {
                         key={file.id}
                         divider
                         secondaryAction={
-                            <Button
-                                variant="outlined"
-                                startIcon={<DownloadIcon />}
-                                onClick={() => void handleDownload(file)}
-                                disabled={
-                                    !isLoaded ||
-                                    downloadingId === file.id
-                                }
-                            >
-                                {downloadingId === file.id
-                                    ? "Downloading..."
-                                    : "Download"}
-                            </Button>
+                            <Stack direction="row" spacing={1}>
+                                <Button
+                                    variant="outlined"
+                                    startIcon={<DownloadIcon />}
+                                    onClick={() => void handleDownload(file)}
+                                    disabled={
+                                        !isLoaded ||
+                                        downloadingId === file.id ||
+                                        deletingId === file.id
+                                    }
+                                >
+                                    {downloadingId === file.id
+                                        ? "Downloading..."
+                                        : "Download"}
+                                </Button>
+
+                                <Button
+                                    variant="contained"
+                                    color="error"
+                                    startIcon={<DeleteIcon />}
+                                    onClick={() => void handleDelete(file)}
+                                    disabled={
+                                        !isLoaded ||
+                                        deletingId === file.id ||
+                                        downloadingId === file.id
+                                    }
+                                >
+                                    {deletingId === file.id
+                                        ? "Deleting..."
+                                        : "Delete"}
+                                </Button>
+                            </Stack>
                         }
                     >
                         <ListItemText
@@ -172,7 +224,7 @@ export function FileList({ refreshToken }: Readonly<FileListProps>) {
 
                     {!isLoaded && (
                         <Alert severity="warning">
-                            Load your encryption key before downloading files.
+                            Load your encryption key before managing files.
                         </Alert>
                     )}
 

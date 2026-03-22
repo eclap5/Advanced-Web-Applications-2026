@@ -85,3 +85,22 @@ export async function findUserById(pool: Pool, id: string): Promise<User | null>
         client.release();
     }
 }
+
+export async function getUserFingerprint(
+    pool: Pool,
+    userId: string,
+): Promise<string | null> {
+    const client = await pool.connect();
+
+    try {
+        const result = await client.queryObject<{ encryptionKeyFingerprint: string | null }>`
+            SELECT encryption_key_fingerprint AS "encryptionKeyFingerprint"
+            FROM users
+            WHERE id = ${userId}
+        `;
+
+        return result.rows[0]?.encryptionKeyFingerprint ?? null;
+    } finally {
+        client.release();
+    }
+}

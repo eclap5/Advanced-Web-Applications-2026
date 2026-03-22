@@ -42,6 +42,9 @@ export async function createFileRecord(
         `;
 
         return result.rows[0];
+    } catch (e: unknown) {
+        console.error("Error creating file record:", e);
+        throw e;
     } finally {
         client.release();
     }
@@ -71,6 +74,9 @@ export async function getFilesByOwnerId(
         `;
 
         return result.rows;
+    } catch (e: unknown) {
+        console.error("Error fetching files by owner ID:", e);
+        throw e;
     } finally {
         client.release();
     }
@@ -100,25 +106,29 @@ export async function getFileByIdAndOwnerId(
         `;
 
         return result.rows[0] ?? null;
+    } catch (e: unknown) {
+        console.error("Error finding file by ID and owner ID:", e);
+        throw e;
     } finally {
         client.release();
     }
 }
 
-export async function getUserFingerprint(
+export async function deleteFileByIdAndOwnerId(
     pool: Pool,
-    userId: string,
-): Promise<string | null> {
+    fileId: string,
+    ownerId: string,
+): Promise<void> {
     const client = await pool.connect();
 
     try {
-        const result = await client.queryObject<{ encryptionKeyFingerprint: string | null }>`
-            SELECT encryption_key_fingerprint AS "encryptionKeyFingerprint"
-            FROM users
-            WHERE id = ${userId}
+        await client.queryObject`
+            DELETE FROM files
+            WHERE id = ${fileId} AND owner_id = ${ownerId}
         `;
-
-        return result.rows[0]?.encryptionKeyFingerprint ?? null;
+    } catch (e: unknown) {
+        console.error("Error deleting file:", e);
+        throw e;
     } finally {
         client.release();
     }

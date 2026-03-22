@@ -204,3 +204,35 @@ export async function downloadFileRequest(
         encryptionIv,
     };
 }
+
+export async function deleteFileRequest(
+    fileId: string,
+    fingerprint: string,
+): Promise<void> {
+    const token = getToken();
+
+    if (!token) {
+        throw new Error("User is not authenticated.");
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/files/${fileId}/delete`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "X-Key-Fingerprint": fingerprint,
+        },
+    });
+
+    if (!response.ok) {
+        let message = "Failed to delete file.";
+
+        try {
+            const result = await response.json();
+            message = result?.error?.message || message;
+        } catch {
+            // Ignore JSON parsing failure for non-JSON error responses.
+        }
+
+        throw new Error(message);
+    }
+}

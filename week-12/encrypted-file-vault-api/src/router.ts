@@ -4,21 +4,28 @@ import { findUserById } from "./repositories/user-repository.ts";
 import type { AuthUser, Handler, LoginResult, RouteKey } from "./types.ts";
 import { corsHeaders, json } from "./utils/response.ts";
 import { withAuth } from "./middleware/auth-middleware.ts";
-import { createEncryptedFile, getEncryptedFileForDownload, listUserFiles } from "./services/file-service.ts";
+import { createEncryptedFile, deleteEncryptedFile, getEncryptedFileForDownload, listUserFiles } from "./services/file-service.ts";
+import { parseLoginBody, parseRegisterBody } from "./utils/validation.ts";
 
 async function registerHandler(req: Request): Promise<Response> {
     const body = await req.json();
-    const { email, password, inviteCode } = body;
 
-    if (typeof email !== "string" || typeof password !== "string" || typeof inviteCode !== "string") {
+    const parsed = parseRegisterBody(body);
+
+    if (!parsed.ok) {
         return json(
-            { ok: false, error: { message: "Email, password, and invite code are required" } },
+            { ok: false, error: { message: parsed.error } },
             400,
         );
     }
 
     try {
-        await registerUser(pool, email, password, inviteCode);
+        await registerUser(
+            pool,
+            parsed.data.email,
+            parsed.data.password,
+            parsed.data.inviteCode,
+        );
         return json({ ok: true }, 201);
     } catch (e: unknown) {
         if (e instanceof Error && e.message === "User with this email already exists") {
@@ -27,7 +34,7 @@ async function registerHandler(req: Request): Promise<Response> {
                 409,
             );
         }
-        if (e instanceof Error && e.message === "Invalid invite code") {
+        if (e instanceof Error && e.message === "Invalid invitation code") {
             return json(
                 { ok: false, error: { message: e.message } },
                 400,
@@ -42,22 +49,22 @@ async function registerHandler(req: Request): Promise<Response> {
 
 async function loginHandler(req: Request): Promise<Response> {
     const body = await req.json();
-    const { email, password } = body;
+    const parsed = parseLoginBody(body);
 
-    if (typeof email !== "string" || typeof password !== "string") {
+    if (!parsed) {
         return json(
-            { ok: false, error: { message: "Email and password are required" } },
+            { ok: false, error: { message: "Invalid email or password" } },
             400,
         );
     }
 
     try {
-        const loginResult: LoginResult = await loginUser(pool, email, password);
+        const loginResult: LoginResult = await loginUser(pool, parsed.email, parsed.password);
         return json({ ok: true, data: loginResult }, 200);
     } catch (e: unknown) {
         if (e instanceof Error && e.message === "Invalid email or password") {
             return json(
-                { ok: false, error: { message: "Invalid email or password" } },
+                { ok: false, error: { message: e.message } },
                 401,
             );
         }
@@ -68,7 +75,7 @@ async function loginHandler(req: Request): Promise<Response> {
     }
 }
 
-const onboardingHandler = withAuth(async (req: Request, user: AuthUser) => {
+const onboardingHandler = withAuth(async (req: Request, user: AuthUser): Promise<Response> => {
     const body = await req.json();
     const encryptionKeyFingerprint: string = body.encryptionKeyFingerprint;
     const userId = user.id;
@@ -87,7 +94,7 @@ const onboardingHandler = withAuth(async (req: Request, user: AuthUser) => {
     }
 });
 
-const dashboardHandler = withAuth(async (_req: Request, user: AuthUser) => {
+const dashboardHandler = withAuth(async (_req: Request, user: AuthUser): Promise<Response> => {
     const dbUser = await findUserById(pool, user.id);
 
     if (!dbUser) {
@@ -110,7 +117,7 @@ const dashboardHandler = withAuth(async (_req: Request, user: AuthUser) => {
     );
 });
 
-const getFilesHandler = withAuth(async (_req: Request, user: AuthUser) => {
+const getFilesHandler = withAuth(async (_req: Request, user: AuthUser): Promise<Response> => {
     try {
         const files = await listUserFiles(pool, user);
 
@@ -269,7 +276,43 @@ const downloadFileHandler = withAuth(async (req: Request, user: AuthUser): Promi
         );
     }
 });
-    
+
+const deleteFileHandler = withAuth(async (req: Request, user: AuthUser): Promise<Response> => {
+    const url = new URL(req.url);
+    const deletePathPattern = /^\/api\/files\/([^/]+)\/delete$/;
+    const match = deletePathPattern.exec(url.pathname);
+    const fileId = match?.[1];
+
+    if (!fileId) {
+        return json(
+            { ok: false, error: { message: "Invalid file id" } },
+            400,
+        );
+    }
+
+    const fingerprint = req.headers.get("X-Key-Fingerprint");
+
+    if (!fingerprint) {
+        return json(
+            { ok: false, error: { message: "Missing key fingerprint" } },
+            400,
+        );
+    }
+    try {
+        await deleteEncryptedFile(pool, user, fileId, fingerprint);
+        return json({ ok: true }, 200);
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            if (error.message === "Unauthorized") {
+                return json({ ok: false, error: { message: "Unauthorized" } }, 401);
+            }
+            if (error.message === "File not found.") {
+                return json({ ok: false, error: { message: "File not found" } }, 404);
+            }
+        }
+        return json({ ok: false, error: { message: "Failed to delete file" } }, 500);
+    }
+});
 
 const routes = new Map<RouteKey, Handler>([
     ["POST /api/auth/register", registerHandler],
@@ -288,12 +331,12 @@ export async function router(req: Request): Promise<Response> {
             return new Response(null, { status: 204, headers: corsHeaders() });
         }
 
-        if (req.method === "GET" && url.pathname.startsWith("/api/files/download/")) {
+        if (req.method === "GET" && url.pathname.startsWith("/api/files/") && url.pathname.endsWith("/download")) {
             return await downloadFileHandler(req);
         }
 
-        if (req.method === "GET" && url.pathname.startsWith("/api/files/") && url.pathname.endsWith("/download")) {
-            return await downloadFileHandler(req);
+        if (req.method === "DELETE" && url.pathname.startsWith("/api/files/") && url.pathname.endsWith("/delete")) {
+            return await deleteFileHandler(req);
         }
 
         const key: RouteKey = `${req.method} ${url.pathname}`;

@@ -11,7 +11,7 @@ export async function registerUser(
     inviteCode: string
 ): Promise<void> {
     if (inviteCode !== Deno.env.get("INVITE_CODE")) {
-        throw new Error("Invalid invite code");
+        throw new Error("Invalid invitation code");
     }
 
     const existingUser = await findUserByEmail(pool, email);

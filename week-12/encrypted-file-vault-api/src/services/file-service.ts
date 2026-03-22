@@ -4,9 +4,10 @@ import {
     createFileRecord,
     getFileByIdAndOwnerId,
     getFilesByOwnerId,
-    getUserFingerprint,
+    deleteFileByIdAndOwnerId
 } from "../repositories/file-repository.ts";
-import { downloadBlob, uploadBlob } from "./blob-storage-service.ts";
+import { deleteBlob, downloadBlob, uploadBlob } from "./blob-storage-service.ts";
+import { getUserFingerprint } from "../repositories/user-repository.ts";
 
 export async function verifyUserFingerprint(
     pool: Pool,
@@ -86,4 +87,15 @@ export async function getEncryptedFileForDownload(
         metadata: file,
         encryptedBytes,
     };
+}
+
+export async function deleteEncryptedFile(
+    pool: Pool,
+    user: AuthUser,
+    fileId: string,
+    fingerprint: string,
+): Promise<void> {
+    await verifyUserFingerprint(pool, user.id, fingerprint);
+    await deleteBlob(`${user.id}/${fileId}`);
+    await deleteFileByIdAndOwnerId(pool, fileId, user.id);
 }
