@@ -7,6 +7,7 @@ import {
     Toolbar,
     Typography,
 } from "@mui/material";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { KeyManager } from "../components/KeyManager";
@@ -16,6 +17,7 @@ import { FileList } from "../components/FileList";
 export function DashboardPage() {
     const navigate = useNavigate();
     const { user, logout } = useAuth();
+    const [filesRefreshToken, setFilesRefreshToken] = useState(0);
 
     function handleLogout() {
         logout();
@@ -55,8 +57,12 @@ export function DashboardPage() {
                     </Box>
 
                     <KeyManager />
-                    <FileUploadForm onUploadSuccess={() => globalThis.location.reload()} />
-                    <FileList />
+                    <FileUploadForm
+                        onUploadSuccess={() => {
+                            setFilesRefreshToken((prev) => prev + 1);
+                        }}
+                    />
+                    <FileList refreshToken={filesRefreshToken} />
                 </Stack>
             </Container>
         </Box>

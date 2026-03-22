@@ -18,6 +18,10 @@ import { decryptFile } from "../utils/crypto";
 import { downloadFileRequest, getFilesRequest } from "../utils/api";
 import type { StoredFile } from "../utils/types";
 
+type FileListProps = {
+    refreshToken: number;
+};
+
 function saveBlobToDisk(blob: Blob, filename: string) {
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
@@ -29,7 +33,7 @@ function saveBlobToDisk(blob: Blob, filename: string) {
     URL.revokeObjectURL(url);
 }
 
-export function FileList() {
+export function FileList({ refreshToken }: Readonly<FileListProps>) {
     const { key, fingerprint, isLoaded } = useEncryptionKey();
 
     const [files, setFiles] = useState<StoredFile[]>([]);
@@ -38,6 +42,7 @@ export function FileList() {
     const [errorMessage, setErrorMessage] = useState("");
 
     async function loadFiles() {
+        setIsLoading(true);
         setErrorMessage("");
 
         try {
@@ -54,7 +59,7 @@ export function FileList() {
 
     useEffect(() => {
         void loadFiles();
-    }, []);
+    }, [refreshToken]);
 
     async function handleDownload(file: StoredFile) {
         if (!isLoaded || !key || !fingerprint) {
