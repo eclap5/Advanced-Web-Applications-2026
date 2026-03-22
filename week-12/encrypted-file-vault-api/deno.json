@@ -1,8 +1,9 @@
 {
   "tasks": {
-    "dev": "deno run --watch --allow-net --allow-read --allow-ffi --allow-env --env-file=.env src/main.ts"
+    "dev": "deno run --watch --allow-net --allow-read --allow-ffi --allow-sys --allow-env --env-file=.env src/main.ts"
   },
   "imports": {
+    "@azure/storage-blob": "npm:@azure/storage-blob@12.17.0",
     "@db/postgres": "jsr:@db/postgres@^0.19.5",
     "@felix/bcrypt": "jsr:@felix/bcrypt@^1.0.8",
     "jose": "npm:jose@^6.2.2"

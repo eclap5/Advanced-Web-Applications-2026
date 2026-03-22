@@ -35,3 +35,25 @@ export type AuthContextValue = {
     logout: () => void;
     refreshCurrentUser: () => Promise<void>;
 };
+
+export type StoredFile = {
+    id: string;
+    originalFilename: string;
+    contentType: string;
+    sizeBytes: number;
+    encryptionAlgorithm: string;
+    encryptionIv: string;
+    createdAt: string;
+};
+
+export type UploadFileResponse = {
+    id: string;
+    originalFilename: string;
+};
+
+export type DownloadFileResponse = {
+    file: Blob;
+    originalFilename: string;
+    contentType: string;
+    encryptionIv: string;
+};

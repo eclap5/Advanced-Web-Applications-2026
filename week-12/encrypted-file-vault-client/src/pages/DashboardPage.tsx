@@ -2,8 +2,6 @@ import {
     AppBar,
     Box,
     Button,
-    Card,
-    CardContent,
     Container,
     Stack,
     Toolbar,
@@ -12,6 +10,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { KeyManager } from "../components/KeyManager";
+import { FileUploadForm } from "../components/FileUploadForm";
+import { FileList } from "../components/FileList";
 
 export function DashboardPage() {
     const navigate = useNavigate();
@@ -50,37 +50,13 @@ export function DashboardPage() {
                         </Typography>
 
                         <Typography variant="body1" color="text.secondary">
-                            Manage your client-side encryption key and encrypted files.
+                            Manage your session key and encrypted file storage.
                         </Typography>
                     </Box>
 
                     <KeyManager />
-
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h6" gutterBottom>
-                                Upload file
-                            </Typography>
-
-                            <Typography variant="body2" color="text.secondary">
-                                This section will later contain the encrypted file
-                                upload form.
-                            </Typography>
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardContent>
-                            <Typography variant="h6" gutterBottom>
-                                Your files
-                            </Typography>
-
-                            <Typography variant="body2" color="text.secondary">
-                                This section will later display files owned by the
-                                currently logged-in user.
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                    <FileUploadForm onUploadSuccess={() => globalThis.location.reload()} />
+                    <FileList />
                 </Stack>
             </Container>
         </Box>

@@ -1,8 +1,11 @@
+const allowedOrigin = Deno.env.get("ALLOWED_ORIGIN") ?? "*";
+
 export function corsHeaders() {
     return {
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": allowedOrigin,
         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Key-Fingerprint",
+        "Access-Control-Expose-Headers": "X-Original-Filename, X-Content-Type, X-Encryption-Iv",
     };
 }
 

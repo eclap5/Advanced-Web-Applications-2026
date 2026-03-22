@@ -22,14 +22,17 @@ export function withAuth(handler: AuthedHandler): Handler {
             );
         }
 
+        let user: AuthUser;
+
         try {
-            const user: AuthUser = await verifyToken(token);
-            return await handler(req, user);
+            user = await verifyToken(token);
         } catch {
             return json(
                 { ok: false, error: { message: "Invalid or expired token" } },
                 401,
             );
         }
+
+        return await handler(req, user);
     };
 }
