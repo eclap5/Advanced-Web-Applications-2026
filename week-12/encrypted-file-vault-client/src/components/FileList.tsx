@@ -82,6 +82,7 @@ export function FileList({ refreshToken }: Readonly<FileListProps>) {
                 response.encryptionIv || file.encryptionIv,
             );
 
+            // Copy to a fresh buffer before constructing Blob for browser download.
             const blobBuffer = new Uint8Array(decryptedBytes.byteLength);
             blobBuffer.set(decryptedBytes);
 

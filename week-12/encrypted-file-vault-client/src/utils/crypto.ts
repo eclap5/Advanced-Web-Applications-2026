@@ -13,6 +13,7 @@ export async function exportKeyToBase64(key: CryptoKey): Promise<string> {
     const rawKey = await crypto.subtle.exportKey("raw", key);
     const bytes = new Uint8Array(rawKey);
 
+    // Convert bytes to a binary string so the key can be persisted as Base64 text.
     const binaryString = Array.from(bytes, (byte) =>
         String.fromCodePoint(byte)
     ).join("");
@@ -35,6 +36,7 @@ export async function importKeyFromBase64(base64Key: string): Promise<CryptoKey>
     }
 
     if (bytes.length !== 32) {
+        // AES-256 keys must always be exactly 32 bytes.
         throw new Error("Invalid key length. Expected a 256-bit AES key.");
     }
 
@@ -74,6 +76,7 @@ export async function encryptFile(
     key: CryptoKey,
 ): Promise<EncryptedFileResult> {
     const fileBuffer = await file.arrayBuffer();
+    // AES-GCM uses a nonce/IV; 12-byte IV is the recommended size.
     const iv = crypto.getRandomValues(new Uint8Array(12));
 
     const encryptedBuffer = await crypto.subtle.encrypt(
@@ -104,6 +107,7 @@ export async function decryptFile(
     key: CryptoKey,
     ivBase64: string,
 ): Promise<Uint8Array> {
+    // IV is sent as Base64 metadata and must be reconstructed before decryption.
     const ivBinary = atob(ivBase64);
     const iv = new Uint8Array(ivBinary.length);
 

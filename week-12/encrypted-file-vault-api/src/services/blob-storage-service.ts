@@ -36,6 +36,7 @@ export async function downloadBlob(blobName: string): Promise<Uint8Array> {
     const chunks: Uint8Array[] = [];
     const textEncoder = new TextEncoder();
 
+    // Normalize stream chunks to Uint8Array so binary payloads can be reassembled.
     for await (const chunk of response.readableStreamBody) {
         if (typeof chunk === "string") {
             chunks.push(textEncoder.encode(chunk));
@@ -48,6 +49,7 @@ export async function downloadBlob(blobName: string): Promise<Uint8Array> {
     const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
     const result = new Uint8Array(totalLength);
 
+    // Concatenate all chunks into one contiguous byte array for downstream decryption.
     let offset = 0;
     for (const chunk of chunks) {
         result.set(chunk, offset);
