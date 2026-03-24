@@ -166,7 +166,14 @@ Verify in Azure Portal that the image is visible in the registry repository list
 After initial deployment, the app may fail to start until environment variables are configured.
 
 6. Open **Application -> Containers -> Environment variables**.
-7. Add all required API environment variables.
+7. Add all required API environment variables. Example values:
+   - `DATABASE_URL=postgres://postgres:postgres@localhost:5432/encrypted-file-vault-db`
+   - `JWT_SECRET=your_jwt_secret_key`
+   - `PORT=8000`
+   - `INVITE_CODE=AWA2026`
+   - `ALLOWED_ORIGIN=http://127.0.0.1:5173`
+   - `AZURE_STORAGE_CONNECTION_STRING=UseDevelopmentStorage=true`
+   - `AZURE_STORAGE_CONTAINER_NAME=encrypted-files`
 8. Set values using your deployed resources:
    - Database URL from PostgreSQL server details.
    - Storage Account connection string from Storage Account access keys.
